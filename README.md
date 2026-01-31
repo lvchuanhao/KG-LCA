@@ -1,48 +1,49 @@
-# KG-LCA —— 知识图谱能耗与碳排放评估框架
+# KG-LCA — Energy Consumption and Carbon Emission Assessment Framework for Knowledge Graphs
 
-KG-LCA 是一个面向**知识图谱操作生命周期（Lifecycle Operations）**的能耗与碳排放测量框架，适用于 Neo4j 等图数据库环境。  
-该系统支持对数据导入、图遍历、多跳查询、属性更新和维护操作进行**精细化能源监控与碳足迹核算**。
+**KG-LCA** is a framework for measuring **energy consumption and carbon emissions across the lifecycle operations of knowledge graphs**, designed for graph database environments such as **Neo4j**.
 
-本项目主要用于**绿色计算研究、图数据库能效评估以及跨硬件平台性能与碳排放对比实验**。
+The framework supports **fine-grained energy monitoring and carbon footprint accounting** for key knowledge graph operations, including data import, graph traversal, multi-hop queries, property updates, and maintenance tasks.
 
----
-
-## 功能特性
-
-- 知识图谱操作能耗自动测量  
-- CPU / 内存 / 磁盘多维度能耗拆分  
-- 空闲基线功率校准（净能耗模型）  
-- 多轮重复实验统计分析  
-- 碳排放自动换算（CO₂ 当量）  
-- 支持多硬件平台对比实验  
-- 非侵入式监控（无需修改数据库内核）  
+This project is primarily intended for **green computing research, graph database energy efficiency evaluation, and cross-hardware platform performance and carbon emission comparison experiments**.
 
 ---
 
-## 支持的操作类型
+## Features
 
-| 操作类型 | 支持情况 |
----------|---------
-数据导入 | ✓  
-图遍历查询 | ✓  
-1-hop 查询 | ✓  
-2-hop 查询 | ✓  
-3-hop 查询 | ✓  
-属性更新 | ✓  
-图清理/删除 | ✓  
+- Automated energy measurement for knowledge graph operations  
+- Multi-dimensional energy breakdown (CPU / memory / disk)  
+- Idle baseline power calibration (net energy consumption model)  
+- Multi-round repeated experiment statistical analysis  
+- Automatic carbon emission conversion (CO₂ equivalent)  
+- Support for cross-hardware platform comparison experiments  
+- Non-intrusive monitoring (no modification to database kernel required)  
 
 ---
 
-## 运行环境要求
+## Supported Operation Types
 
-### 软件环境
+| Operation Type | Supported |
+|---------------|-----------|
+| Data import | ✓ |
+| Graph traversal | ✓ |
+| 1-hop query | ✓ |
+| 2-hop query | ✓ |
+| 3-hop query | ✓ |
+| Property update | ✓ |
+| Graph cleanup / delete | ✓ |
 
-- Python >= 3.9  
+---
+
+## Runtime Environment Requirements
+
+### Software Environment
+
+- Python ≥ 3.9  
 - Neo4j 4.x / 5.x  
 
 ---
 
-### 推荐环境配置（Conda）
+### Recommended Conda Environment
 
 ```bash
 conda create -n kg-lca python=3.10
@@ -51,13 +52,13 @@ conda activate kg-lca
 
 ---
 
-### 安装依赖
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-主要依赖库包括：
+Main dependencies include:
 
 * numpy
 * scipy
@@ -67,11 +68,11 @@ pip install -r requirements.txt
 
 ---
 
-## 系统配置
+## System Configuration
 
-### 数据库连接配置
+### Database Connection Configuration
 
-编辑 `config.py`：
+Edit `config.py`:
 
 ```python
 NEO4J_URI = "bolt://localhost:7687"
@@ -81,9 +82,9 @@ NEO4J_PASSWORD = "password"
 
 ---
 
-### 实验参数配置
+### Experiment Parameter Configuration
 
-示例：
+Example:
 
 ```python
 REPEAT = 30
@@ -91,75 +92,75 @@ WARMUP_RUNS = 5
 ENABLE_DB_CLEANUP = True
 ```
 
-参数说明：
+Parameter descriptions:
 
-| 参数名               | 说明          |
-| ----------------- | ----------- |
-| REPEAT            | 每个操作的重复测量次数 |
-| WARMUP_RUNS       | 正式测量前的预热次数  |
-| ENABLE_DB_CLEANUP | 是否自动清空数据库   |
+| Parameter Name    | Description                                      |
+| ----------------- | ------------------------------------------------ |
+| REPEAT            | Number of repeated measurements per operation    |
+| WARMUP_RUNS       | Number of warm-up runs before formal measurement |
+| ENABLE_DB_CLEANUP | Whether to automatically clean the database      |
 
 ---
 
-## 运行方法
+## How to Run
 
-在项目根目录执行：
+Execute the following command in the project root directory:
 
 ```bash
 python main.py
 ```
 
-系统将自动完成：
+The system will automatically perform:
 
-* 空闲基线功率测量
-* 知识图谱工作负载执行
-* 硬件资源能耗采样
-* 净能耗计算
-* 碳排放换算
-* 多轮统计分析
-* 实验结果保存
+* Idle baseline power measurement
+* Knowledge graph workload execution
+* Hardware resource energy sampling
+* Net energy consumption calculation
+* Carbon emission conversion
+* Multi-round statistical analysis
+* Experimental result persistence
 
 ---
 
-## 输出结果说明
+## Output Description
 
-所有实验结果保存在：
+All experimental results are saved in:
 
 ```
 report/
 ```
 
-### 主要输出文件
+### Main Output Files
 
-| 文件名                           | 说明        |
-| ----------------------------- | --------- |
-| latest_experiment_summary.csv | 实验汇总结果    |
-| experiment_detailed_*.csv     | 单次实验原始数据  |
-| experiment_metadata.json      | 实验配置与环境信息 |
+| File Name                     | Description                                       |
+| ----------------------------- | ------------------------------------------------- |
+| latest_experiment_summary.csv | Summary of experimental results                   |
+| experiment_detailed_*.csv     | Raw data of individual experiments                |
+| experiment_metadata.json      | Experiment configuration and environment metadata |
 
 ---
 
-## 碳排放计算模型
+## Carbon Emission Calculation Model
 
-系统默认碳强度参数：
+Default carbon intensity parameter:
 
 ```
 550 gCO2 / kWh
 ```
 
-换算公式：
+Conversion formula:
 
 ```
-CO2 = 能耗(J) / 3.6e6 × 碳强度
+CO2 = Energy (J) / 3.6e6 × Carbon Intensity
 ```
 
-可在以下文件中修改：
+You can modify the carbon intensity parameter in:
 
 ```
 core/kg_lca_core.py
 ```
 
-示例：
+Example:
 
 ```python
 carbon_intensity = 550.0
@@ -167,7 +168,7 @@ carbon_intensity = 550.0
 
 ---
 
-## 项目结构说明
+## Project Structure
 
 ```
 project/
@@ -186,48 +187,44 @@ project/
 
 ---
 
-## 典型应用场景
+## Typical Application Scenarios
 
-* 知识图谱系统能效评估
-* 绿色计算与绿色数据库研究
-* 不同硬件平台能耗对比
-* 碳足迹建模与分析
-* 学术实验复现
-* 系统性能与节能优化
-
----
-
-## 实验建议
-
-为了保证实验结果稳定性与可复现性：
-
-* 实验期间关闭无关后台程序
-* 固定 CPU 频率调节策略
-* 多平台使用相同数据集
-* 避免设备过热降频
-* 建议进行多轮重复实验
+* Energy efficiency evaluation of knowledge graph systems
+* Green computing and green database research
+* Cross-hardware platform energy consumption comparison
+* Carbon footprint modeling and analysis
+* Reproducible academic experiments
+* System performance and energy optimization
 
 ---
 
-## 许可说明
+## Experimental Recommendations
 
-本项目仅限**科研与教学用途**使用。
-如需商业用途，请联系作者授权。
+To ensure stability and reproducibility of experimental results:
+
+* Close unnecessary background processes during experiments
+* Fix CPU frequency scaling policies
+* Use the same dataset across different platforms
+* Avoid thermal throttling due to overheating
+* Perform multiple rounds of repeated experiments
 
 ---
 
-## 学术引用
+## License
 
-如果在论文或科研工作中使用本框架，请引用：
+This project is intended **for research and educational purposes only**.
+For commercial usage, please contact the author for authorization.
+
+---
+
+## Citation
+
+If you use this framework in academic publications or research work, please cite:
 
 ```
-KG-LCA: 知识图谱操作能耗与碳排放评估框架
-```
-
----
-
-如果本项目对你的研究有所帮助，欢迎 Star 支持。
-
+KG-LCA: An Energy and Carbon Emission Assessment Framework for Knowledge Graph Operations
 ```
 
 ---
+
+If this project is helpful to your research, feel free to ⭐ star the repository.
